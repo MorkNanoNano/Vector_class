@@ -27,20 +27,23 @@ void fload(const std::string&, vector<T>&);
 // template<typename Iter>
 // static void merge(Iter, Iter, Iter);
 
-template<typename T, class iterator>
-double sum(iterator, iterator);
+template<typename T>
+double sum(random_access_iterator<vector<T>>, random_access_iterator<vector<T>>);
 
 template<typename T>
-void print(vector<T>&, std::stringstream);
+void sprint(vector<T>&, std::stringstream);
 
-template<typename T, class iterator>
-void print(iterator, iterator);
+template<typename T>
+void tprint(random_access_iterator<vector<T>>, random_access_iterator<vector<T>>);
 
-template<typename T, class iterator>
-T minval(iterator, iterator);
+template<typename T>
+void fprint(vector<T>&, const std::string&);
 
-template<typename T, class iterator>
-T maxval(iterator, iterator);
+template<typename T>
+T minval(random_access_iterator<vector<T>>, random_access_iterator<vector<T>>);
+
+template<typename T>
+T maxval(random_access_iterator<vector<T>>, random_access_iterator<vector<T>>);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ALGORITHM FUNTION IMPLEMENTATION
@@ -57,23 +60,23 @@ void fload(const std::string& filename, myobj::vector<T>& vec){
     }
 }
 
-template<typename T, class iterator> 
-double sum(iterator first, iterator last){
+template<typename T> 
+double sum(random_access_iterator<vector<T>> first, random_access_iterator<vector<T>> last){
     double out = 0; 
     for(auto it = first; it != last; ++it)
         out += *it;
     return out;
 }
 
-template<typename T, class iterator>
-void print(iterator first, iterator last, std::stringstream strm){
+template<typename T>
+void sprint(random_access_iterator<vector<T>> first, random_access_iterator<vector<T>> last, std::stringstream strm){
     for(; first != last; ++first)
         strm << *first << "\n";
     strm << std::endl;
 }
 
-template<typename T, class iterator>
-void print(iterator first, iterator last){
+template<typename T>
+void tprint(random_access_iterator<vector<T>> first, random_access_iterator<vector<T>> last){
     for(; first != last; ++first)
         std::cout << *first << "\n";
     std::cout << std::endl;
@@ -86,8 +89,8 @@ void fprint(vector<T>& vec , const std::string& filename){
     out.close();
 }
 
-template<typename T, class iterator>
-T minval(iterator first, iterator last){
+template<typename T>
+T minval(random_access_iterator<vector<T>> first, random_access_iterator<vector<T>> last){
     T m_val = *first;
     for(first+1 ; first != last; ++first){
         if(*first < m_val)
@@ -96,8 +99,8 @@ T minval(iterator first, iterator last){
     return m_val;
 }
 
-template<typename T, class iterator>
-T maxval(iterator first, iterator last){
+template<typename T>
+T maxval(random_access_iterator<vector<T>> first, random_access_iterator<vector<T>> last){
     T m_val = *first;
     for(first+1 ; first != last; ++first){
         if(*first > m_val)
