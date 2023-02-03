@@ -1,6 +1,6 @@
 /**
  * @file vector.h
- * @author Andrea Pizzi (https://github.com/MorkNanoNano/_progress_vector_class)
+ * @author Andrea Pizzi (https://github.com/MorkNanoNano/Vector_class)
  * @brief Implementation of STL like vector class
  * @version 0.1
  * @date 2023-01-26
