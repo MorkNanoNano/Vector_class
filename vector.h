@@ -3,7 +3,7 @@
  * @author Andrea Pizzi (https://github.com/MorkNanoNano/Vector_class)
  * @brief Implementation of STL like vector class
  * @version 0.1
- * @date 2023-01-26
+ * @date 2023-02-05
  * 
  * @copyright Copyright (c) 2023
  * 
@@ -15,6 +15,7 @@
 #define _VECTOR_HEADER_ 
 
 #include <iostream>
+#include "algorithm.h"
 
 
 namespace myobj{
@@ -46,9 +47,15 @@ public:
     constexpr void reserve(size_t f_size) noexcept;
     void insert(iterator pos, T&);
     void insert(iterator pos, T&&);
+    void insert(iterator pos, iterator start, iterator stop);
+    void erase(iterator pos) noexcept;
+    T* data();
     inline void pop_back();
     inline void clear();
+    void shrink_to_fit();
+    bool empty() noexcept;
     constexpr inline size_t size() const noexcept;
+    constexpr inline size_t capacity() const noexcept;
     T& operator[](size_t idx);
     constexpr const T& operator[](size_t idx) const;
     vector<T>& operator=(const vector& other) noexcept;
@@ -62,8 +69,9 @@ public:
 private:
  	constexpr void realloc(size_t new_capacity) noexcept;
     void rshift(iterator pos) noexcept;
+    void rshift(iterator pos, iterator start, iterator stop) noexcept;
 
-private:
+public:
 	T* m_data;
 	size_t m_size;
 	size_t m_capacity;
@@ -119,12 +127,28 @@ constexpr void vector<T>::realloc(size_t new_capacity) noexcept {
 
 template<typename T>
 void vector<T>::rshift(iterator pos) noexcept {
-    if(m_size >= m_capacity)
-        this->realloc(m_capacity + 1 + m_capacity/2);
+    if(m_size +1 >= m_capacity)
+        realloc((m_capacity == 0) ? 1 : m_capacity + m_capacity / 2);
 
     __int32_t idx = m_size;
 
-    for(auto it = this-> end()-1; it!= pos-1; --it)
+    for(auto it = end()-1; it != pos-1; --it)
+        m_data[idx--] = std::move(*it);
+}
+
+template<typename T>
+void vector<T>::rshift(iterator pos, iterator start, iterator stop) noexcept {
+    auto ptr_distance = ranges::distance(start, stop);
+
+    if(ptr_distance == 0)
+        return;
+
+    if(m_size + ptr_distance >= m_capacity)
+        realloc(m_size + ptr_distance);
+
+    __int32_t idx = m_size + ptr_distance; 
+
+    for(auto it = end(); it != pos-1; --it)
         m_data[idx--] = std::move(*it);
 }
 
@@ -134,7 +158,7 @@ void vector<T>::rshift(iterator pos) noexcept {
 template<typename T>
 void vector<T>::push_back(T&& data) noexcept {
     if (m_size >= m_capacity)
-        this->realloc(m_capacity + 1 + m_capacity / 2);
+        realloc((m_capacity == 0) ? 1 : m_capacity + m_capacity / 2);
 
     m_data[m_size] = std::move(data);
     m_size++;
@@ -143,7 +167,7 @@ void vector<T>::push_back(T&& data) noexcept {
 template <typename T>
 void vector<T>::push_back(const T& data) noexcept {
     if (m_size >= m_capacity)
-        this->realloc(m_capacity + 1 + m_capacity / 2);
+        realloc((m_capacity == 0) ? 1 : m_capacity + m_capacity / 2);
 
     m_data[m_size] = data;
     m_size++;
@@ -153,8 +177,8 @@ template<typename T>
 template<typename... Args>
 T& vector<T>::emplace_back(Args&&... args) noexcept {
     if (m_size >= m_capacity)
-        this->realloc(m_capacity + 1 + m_capacity / 2);
-
+        realloc((m_capacity == 0) ? 1 : m_capacity + m_capacity / 2);
+        
     new(&m_data[m_size]) T(std::forward<Args>(args)...);
     return m_data[m_size++];
 }
@@ -162,21 +186,44 @@ T& vector<T>::emplace_back(Args&&... args) noexcept {
 template<typename T>
 constexpr void vector<T>::reserve(size_t f_size) noexcept {
     if(f_size > m_capacity)
-        this->realloc(f_size);
+        realloc(f_size);
 }
 
 template<typename T>
 void vector<T>::insert(iterator pos, T& val){
-    this->rshift(pos);
+    rshift(pos);
     *pos = val;
     m_size++;
 }
 
 template<typename T>
 void vector<T>::insert(iterator pos, T&& val){
-    this->rshift(pos);
+    rshift(pos);
     *pos = val;
     m_size++;
+}
+
+template<typename T>
+void vector<T>::insert(iterator pos, iterator start, iterator stop){
+    rshift(pos, start, stop);
+    for( ; start != stop; ++start){
+        *pos++ = std::move(*start);
+        m_size++;
+    }
+}
+
+template<typename T>
+void vector<T>::erase(iterator pos) noexcept {
+    __int32_t idx = ranges::distance(begin(), pos);
+
+    for(auto it = pos+1; it != end(); ++it)
+        m_data[idx++] = *it;
+    m_size--;
+}
+
+template<typename T>
+T* vector<T>::data(){
+    return m_data;
 }
 
 template <typename T>
@@ -196,7 +243,23 @@ void vector<T>::clear() {
 }
 
 template<typename T>
+void vector<T>::shrink_to_fit(){
+    if(m_capacity > m_size)
+        realloc(m_size);
+}
+
+template<typename T>
+bool vector<T>::empty() noexcept {
+    if(m_size != 0)
+        return false;
+    return true;
+}
+
+template<typename T>
 constexpr size_t vector<T>::size() const noexcept { return m_size;  }
+
+template<typename T>
+constexpr size_t vector<T>::capacity() const noexcept { return m_capacity; }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  CLASS OPERATOR IMPLEMENTATION
