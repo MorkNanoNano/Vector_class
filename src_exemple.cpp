@@ -2,20 +2,28 @@
 #include "vector.h"
 #include "algorithm.h"
 
+void print(int* ptr){
+    for(int i = 0; i < 1; i++)
+        std::cout << ptr[i] << std::endl;
+}
+
 int main(){
 
-    myobj::vector<double> vec;
+    myobj::vector<int> vec;
+    myobj::algorithm::fload("test.data", vec);  
 
-    myobj::algorithm::fload("data.dat", vec);
-    vec.insert(vec.begin()+3, 10);
+    myobj::algorithm::sort(vec.begin(), vec.end());
 
+    for(auto& val : vec)
+        std::cout << val << std::endl;
 
-    myobj::ranges::for_each(vec.begin(), vec.end(), [](auto&& x)-> void { std::cout << x*x << std::endl;});
-    std::cout << myobj::ranges::count_if(vec.begin(), vec.end(), [](auto&& x)-> bool { if(x = 33.1164){return true;} return false;}) << std::endl;
-   
-    myobj::random_access_iterator<myobj::vector<double>> idx = myobj::ranges::find(vec.begin(), vec.end(), 33.1164);
+    auto lambda = [](auto& val)->bool { if(val < 5 && val >3) return true; return false; };
 
-    std::cout << *idx << std::endl;
+    myobj::vector<int> out;
+    myobj::ranges::for_each(vec.begin(), vec.end(), [&out, &lambda](auto& val)->void { if(lambda(val)) out.emplace_back(val); });
+
+    print(out.data());
 
     std::cin.get();
 }
+
