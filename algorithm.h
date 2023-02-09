@@ -1,5 +1,5 @@
 /**
- * @file vector.h
+ * @file algorithm.h
  * @author Andrea Pizzi (https://github.com/MorkNanoNano/Vector_class)
  * @brief Implementation of some algorithm for vector and iterator class
  * @version 0.1
