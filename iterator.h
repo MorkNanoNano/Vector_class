@@ -1,3 +1,14 @@
+/**
+ * @file vector.h
+ * @author Andrea Pizzi (https://github.com/MorkNanoNano/Vector_class)
+ * @brief Implementation of an iterator
+ * @version 0.1
+ * @date 2023-02-05
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #pragma once
 
 #ifndef _VECTOR_ITERATOR_HEADER_
