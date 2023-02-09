@@ -1,5 +1,5 @@
 /**
- * @file vector.h
+ * @file iterator.h
  * @author Andrea Pizzi (https://github.com/MorkNanoNano/Vector_class)
  * @brief Implementation of an iterator
  * @version 0.1
