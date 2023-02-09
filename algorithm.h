@@ -1,11 +1,26 @@
+/**
+ * @file vector.h
+ * @author Andrea Pizzi (https://github.com/MorkNanoNano/Vector_class)
+ * @brief Implementation of some algorithm for vector and iterator class
+ * @version 0.1
+ * @date 2023-02-05
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #pragma once 
 
 #ifndef _ALGORITHM_HEADER_
 #define _ALGORITHM_HEADER_
 
 #include <fstream>
+#include <iostream>
 #include <sstream>
+
+#ifndef _RANGE_HEADER_
 #include "range.h"
+#endif //_RANGE_HEADER_
 
 namespace myobj{
 
@@ -24,8 +39,17 @@ namespace algorithm{
 template<typename T> 
 void fload(const std::string&, vector<T>&);
 
-// template<typename Iter>
-// static void merge(Iter, Iter, Iter);
+// template<class Iter>
+// static vector<typename Iter::value_type> inplace_merge(Iter, Iter, Iter);
+
+// template<class Iter>
+// void merge_sort(Iter, Iter);
+
+template<class Iter>
+void sort(Iter, Iter);
+
+template<class vector>
+void bubble_sort(vector&);
 
 template<typename T>
 double sum(random_access_iterator<vector<T>>, random_access_iterator<vector<T>>);
@@ -57,10 +81,64 @@ void fload(const std::string& filename, myobj::vector<T>& vec){
         vec.reserve(size); T val = 0; 
         while(in >> val) vec.emplace_back(val);
         in.close();
+        vec.shrink_to_fit();
     }
 }
 
-template<typename T> 
+// template<class Iter>
+// static vector<typename Iter::value_type> inplace_merge(Iter begin, Iter mid, Iter end){
+//     vector<typename Iter::value_type> buffer(ranges::distance(begin, end));
+//     Iter left(begin); Iter right(mid);
+
+//     while(left != mid && right != end)
+//         buffer.push_back(std::move((*left > *right) ? *right++ : *left++));
+    
+//     if(left != mid)
+//         buffer.insert(buffer.end(), left, mid);
+//     else    
+//         buffer.insert(buffer.end(), right, end);
+
+//     return buffer;
+// }
+
+// template<class Iter>        
+// void merge_sort(Iter begin, Iter end){
+//        if(ranges::distance(begin, end)  > 1){
+//         typename Iter::difference_type diff = ranges::distance(begin, end) / 2;
+//         Iter mid = ranges::advance(begin, diff);
+//         merge_sort(begin, mid);
+//         merge_sort(mid+1, end);
+//         vector<typename Iter::value_type> out(std::move(inplace_merge(begin, mid, end)));    
+//         std::move(out.begin(), out.end(), begin);  
+//     }
+// }
+
+template<typename Iter>
+void sort(Iter begin, Iter end){
+    vector<typename Iter::value_type> buffer(ranges::distance(begin, end));
+    Iter left = begin; Iter right = end-1;
+
+    while(left != right)
+        buffer.emplace_back(std::move((*left < *right) ? *left++ : *right--));
+    buffer.emplace_back(std::move(*right));
+
+    std::move(buffer.begin(), buffer.end(), begin);  
+}
+
+template<class vector>
+void buuble_sort(vector& vec){
+    for(auto previous = vec.begin(); previous != vec.end()-1; ++previous){
+        for(auto next = previous+1; next != vec.end(); ++next){
+            if(*next < *previous){
+                typename vector::value_type tmp = *previous;
+                *previous = * next;
+                *next = tmp;
+            }
+        }
+    }
+}
+
+template<typename T >    
 double sum(random_access_iterator<vector<T>> first, random_access_iterator<vector<T>> last){
     double out = 0; 
     for(auto it = first; it != last; ++it)
@@ -112,4 +190,8 @@ T maxval(random_access_iterator<vector<T>> first, random_access_iterator<vector<
 }  //ALGORITHM NAMESPACE END
 }  //MYOBJ NAMESPACE END
 
-#endif //_ALGORITHM_HEADER_
+#ifndef _STATISTICS_HEADER_
+#include "statistics.h"
+#endif //_STATISTICS_HEADER_
+
+#endif //_ALGORITHM_HEADER_ 
