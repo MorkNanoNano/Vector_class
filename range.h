@@ -1,3 +1,14 @@
+/**
+ * @file range.h
+ * @author Andrea Pizzi (https://github.com/MorkNanoNano/Vector_class)
+ * @brief Implementation of some function that works on range
+ * @version 0.1
+ * @date 2023-02-06
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #pragma once 
 
 #ifndef _RANGE_HEADER_
@@ -43,6 +54,12 @@ random_access_iterator<vector<T>> find_if(random_access_iterator<vector<T>>, ran
 
 template<typename T, class Pred>
 random_access_iterator<vector<T>> find_if_not(random_access_iterator<vector<T>>, random_access_iterator<vector<T>>, Pred&&);
+
+template<typename T>
+random_access_iterator<vector<T>> advance(random_access_iterator<vector<T>>, __int32_t);
+
+template<class Iter>
+constexpr typename Iter::difference_type distance(Iter, Iter);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // RANGES FUNCTION IMPLEMENTATION
@@ -121,6 +138,24 @@ random_access_iterator<vector<T>> find_if_not(random_access_iterator<vector<T>> 
         if(!pred(*first))
             return first;
     return last;   
+}
+
+template<typename T>
+random_access_iterator<vector<T>> advance(random_access_iterator<vector<T>> pos, __int32_t next){
+    return pos + next;
+}
+
+template<class Iter>
+constexpr typename Iter::difference_type distance(Iter first, Iter last){
+    using category = typename Iter::iterator_category;
+    if constexpr(std::is_convertible_v<std::random_access_iterator_tag, category>)
+        return last - first;
+    typename Iter::difference_type step = 0;
+    while(first != last){
+        first++;
+        step++;
+    }
+    return step;
 }
 
 } // RANGES NAMESPACE END
