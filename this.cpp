@@ -9,7 +9,7 @@ public:
     void print_using_this(); // funzione che stampa x, y usando this
 
 public:
-    double x, y; // datamembri privati
+    double x, y; // datamembri che per semplicità sono stati dichiarati public
 };
 
 // Semplice dicharazione della firma della funzione, 
@@ -42,7 +42,7 @@ void print_value(Entity* this) {
 
 */
 
-// Di fatto il puntatore passato sara un po piu complesso
+// Di fatto il puntatore passato sarà un pò piu complesso
 // in quanto sara Entity* const this, 
 // ma non ci serve sapere questa finezza che resta only for curious kids xD
 
