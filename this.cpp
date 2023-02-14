@@ -20,7 +20,7 @@ void print(Entity* ptr);
 
 // Implementazione delle funzioni membro della classe Entity
 Entity::Entity() 
-    : x(100), y(50) { }
+    : x(100), y(50) { } // inizializza x = 100 && y = 50
 
 void Entity::print_value() {
     std::cout << "The x value is: " << x << std::endl;
