@@ -12,12 +12,13 @@ public:
     double x, y; // datamembri che per semplicità sono stati dichiarati public
 };
 
+
 // Semplice dicharazione della firma della funzione, 
 void print(Entity* ptr);
 // altrimenti C++ mi picchia durissimo
 
 
-// Implementazione delle funzioni dichiarate sopra
+// Implementazione delle funzioni membro della classe Entity
 Entity::Entity() 
     : x(100), y(50) { }
 
