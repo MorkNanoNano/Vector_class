@@ -13,7 +13,7 @@ public:
 };
 
 
-// Semplice dicharazione della firma della funzione, 
+// Semplice dicharazione della firma della funzione print(),
 void print(Entity* ptr);
 // altrimenti C++ mi picchia durissimo
 
